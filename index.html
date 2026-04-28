@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday 💕</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #ffc1dc, #ff7eb6);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: white;
+    }
+
+    .screen {
+      min-height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .passcode-container {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .photo-card {
+      position: relative;
+      width: 320px;
+      background: white;
+      padding: 18px 18px 45px;
+      border-radius: 10px;
+      transform: rotate(-4deg);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .bow {
+      position: absolute;
+      top: -18px;
+      right: -10px;
+      font-size: 60px;
+    }
+
+    .bear {
+      position: absolute;
+      bottom: -45px;
+      left: -45px;
+      font-size: 90px;
+    }
+
+    .passcode-box {
+      text-align: center;
+    }
+
+    .passcode-box h1 {
+      font-size: 2.2rem;
+      margin-bottom: 18px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .dot {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.2);
+      border: 3px solid rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .key {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      background: white;
+      color: #ff5ca8;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      transition: 0.15s ease;
+    }
+
+    .key:hover {
+      transform: scale(1.07);
+    }
+
+    .message {
+      margin-top: 18px;
+      min-height: 24px;
+      font-weight: bold;
+    }
+
+    .content-wrap {
+      width: 100%;
+      max-width: 900px;
+      text-align: center;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.22);
+      border-radius: 28px;
+      padding: 35px 24px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .content-wrap h2 {
+      font-size: 2.3rem;
+      margin-bottom: 18px;
+    }
+
+    .content-wrap p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto 18px;
+    }
+
+    .big-photo {
+      width: min(100%, 360px);
+      border-radius: 20px;
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 25px;
+    }
+
+    .memory-card {
+      background: rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    .memory-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    .memory-card p {
+      font-size: 0.95rem;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .nav-buttons {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-buttons button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 999px;
+      background: white;
+      color: #ff5ca8;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .hearts {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    ul.reasons {
+      list-style: none;
+      max-width: 650px;
+      margin: 20px auto 0;
+      text-align: left;
+    }
+
+    ul.reasons li {
+      background: rgba(255,255,255,0.18);
+      padding: 14px 16px;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .passcode-container {
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .photo-card {
+        width: 260px;
+      }
+
+      .photo-card img {
+        height: 290px;
+      }
+
+      .passcode-box h1 {
+        font-size: 1.8rem;
+      }
+
+      .keypad {
+        grid-template-columns: repeat(3, 70px);
+        gap: 12px;
+      }
+
+      .key {
+        width: 70px;
+        height: 70px;
+        font-size: 1.7rem;
+      }
+
+      .dot {
+        width: 46px;
+        height: 46px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MUSIC -->
+  <audio id="bgMusic" loop>
+    <source src="Las Mananitas.mp4" type="audio/mpeg">
+  </audio>
+
+  <!-- PASSCODE PAGE -->
+  <section class="screen active" id="lockScreen">
+    <div class="passcode-container">
+
+      <div class="photo-card">
+        <div class="bow">🎀</div>
+        <img src="pic1.jpg" alt="Her Photo">
+        <div class="bear">🧸</div>
+      </div>
+
+      <div class="passcode-box">
+        <h1>Ingresa un código</h1>
+
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+
+        <div class="keypad">
+          <button class="key" onclick="pressKey('1')">1</button>
+          <button class="key" onclick="pressKey('2')">2</button>
+          <button class="key" onclick="pressKey('3')">3</button>
+          <button class="key" onclick="pressKey('4')">4</button>
+          <button class="key" onclick="pressKey('5')">5</button>
+          <button class="key" onclick="pressKey('6')">6</button>
+          <button class="key" onclick="pressKey('7')">7</button>
+          <button class="key" onclick="pressKey('8')">8</button>
+          <button class="key" onclick="pressKey('9')">9</button>
+          <button class="key" onclick="clearCode()">*</button>
+          <button class="key" onclick="pressKey('0')">0</button>
+          <button class="key" onclick="backspace()">#</button>
+        </div>
+
+        <div class="message" id="message"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PAGE 1 -->
+  <section class="screen" id="page1">
+    <div class="content-wrap">
+      <div class="hearts">💕🎂💕</div>
+      <h2>Feliz Cumpleaños, Olvidadiza</h2>
+
+      <img src="pic2.jpg" alt="Photo" class="big-photo">
+
+      <p>
+        Hoy todo es sobre ti y lo especial que eres. 
+        Hice esta página para tu cumpleaños para que siempre puedas volver a verla y sonreír.
+      </p>
+
+      <p>
+        Espero que este día te traiga felicidad, cariño y todo lo bueno en la vida, 
+        porque significas mucho para mí y de verdad estoy agradecido de tenerte en mi vida.
+      </p>
+
+      <div class="nav-buttons">
+        <button onclick="showPage('page2')">Siguiente 💌</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 -->
+  <section class="screen" id="page2">
+    <div class="content-wrap">
+      <div class="hearts">✨💕✨</div>
+      <h2>Una carta para ti</h2>
+
+      <p>
+        Aunque no salgamos mucho, sigues siendo alguien muy especial para mí. 
+        Tienes una forma de hacer que las cosas se sientan un poco mejor simplemente siendo tú.
+      </p>
+
+      <p>
+        En tu cumpleaños, quiero que recuerdes lo importante que eres y lo mucho que se te aprecia.
+      </p>
+
+      <div class="nav-buttons">
+        <button onclick="showPage('page1')">Atrás</button>
+        <button onclick="showPage('memoriesPage')">Siguiente 📸</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMORIES PAGE -->
+  <section class="screen" id="memoriesPage">
+    <div class="content-wrap">
+      <div class="hearts">📸💕🌸</div>
+      <h2>Recuerdos</h2>
+
+      <p>
+        Estas son algunas fotos y momentos que me has compartido y que aprecio mucho.
+      </p>
+
+      <div class="memory-grid">
+        <div class="memory-card">
+          <img src="memory1.jpg" alt="Memory 1">
+          <p>Luz del sol 💕</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory2.jpg" alt="Memory 2">
+          <p>Momento divertido ✨</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory3.jpg" alt="Memory 3">
+          <p>Salió muy bien 🌸</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory4.jpg" alt="Memory 4">
+          <p>Perdida en pensamiento 💕</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory5.jpg" alt="Memory 5">
+          <p>Luces de Navidad juntos ✨</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory6.jpg" alt="Memory 6">
+          <p>Minnie Mouse 🌸</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory7.jpg" alt="Memory 7">
+          <p>Sonrisa brillante 💕</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory8.jpg" alt="Memory 8">
+          <p>Recuerdo de cumpleaños ✨</p>
+        </div>
+
+        <div class="memory-card">
+          <img src="memory9.jpg" alt="Memory ">
+          <p>Momento de la infancia 🌸</p>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="showPage('page2')">Atrás</button>
+        <button onclick="showPage('page3')">Siguiente 💕</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3 -->
+  <section class="screen" id="page3">
+    <div class="content-wrap">
+      <div class="hearts">🌷🎀🧸</div>
+      <h2>Razones por las que eres tan especial</h2>
+
+      <ul class="reasons">
+        <li>💕 Eres fácil de hablar y agradable estar contigo.</li>
+        <li>💕 Tu sonrisa puede alegrar cualquier día.</li>
+        <li>💕 Eres una persona increíble en muchos sentidos.</li>
+        <li>💕 Te mereces toda la felicidad del mundo.</li>
+        <li>💕 Estar contigo hace los momentos más agradables.</li>
+        <li>💕 Eres una persona muy importante en mi vida.</li>
+      </ul>
+
+      <div class="footer-note">Hecho con cariño para tu día especial 💕</div>
+
+      <div class="nav-buttons">
+        <button onclick="showPage('memoriesPage')">Atrás</button>
+        <button onclick="showPage('page4')">Siguiente 🎁</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4 -->
+  <section class="screen" id="page4">
+    <div class="content-wrap">
+      <div class="hearts">🎂💕🎁</div>
+      <h2>Una cosa más...</h2>
+
+      <p>
+        Espero que cada vez que abras esto te recuerde lo importante que eres para mí. 
+        Feliz cumpleaños, Ita. Espero que tengas un día increíble.
+      </p>
+
+      <img src="pic3.jpg" alt="Memory Photo" class="big-photo">
+
+      <div class="nav-buttons">
+        <button onclick="showPage('page3')">Atrás</button>
+        <button onclick="showPage('lockScreen')">Pantalla de bloqueo</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const correctCode = "0510"; // CHANGE PASSCODE HERE
+    let enteredCode = "";
+
+    function updateDots() {
+      const dots = document.querySelectorAll(".dot");
+
+      dots.forEach((dot, index) => {
+        dot.textContent = index < enteredCode.length ? "✱" : "";
+      });
+    }
+
+    function pressKey(num) {
+      if (enteredCode.length < 4) {
+        enteredCode += num;
+        updateDots();
+      }
+
+      if (enteredCode.length === 4) {
+        setTimeout(() => {
+          if (enteredCode === correctCode) {
+            document.getElementById("message").textContent = "Contraseña correcta 💕";
+
+            const music = document.getElementById("bgMusic");
+            music.play().catch(() => {
+              console.log("Music needs user interaction.");
+            });
+
+            setTimeout(() => showPage("page1"), 500);
+          } else {
+            document.getElementById("message").textContent = "Wrong passcode, try again";
+            enteredCode = "";
+            updateDots();
+          }
+        }, 200);
+      }
+    }
+
+    function clearCode() {
+      enteredCode = "";
+      updateDots();
+      document.getElementById("message").textContent = "";
+    }
+
+    function backspace() {
+      enteredCode = enteredCode.slice(0, -1);
+      updateDots();
+      document.getElementById("message").textContent = "";
+    }
+
+    function showPage(pageId) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+      });
+
+      document.getElementById(pageId).classList.add("active");
+
+      if (pageId === "lockScreen") {
+        enteredCode = "";
+        updateDots();
+        document.getElementById("message").textContent = "";
+      }
+    }
+  </script>
+
+</body>
+</html>
